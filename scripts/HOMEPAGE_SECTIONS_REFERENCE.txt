@@ -1,0 +1,368 @@
+HOMEPAGE SECTIONS REFERENCE
+============================
+File: components/LandingPage.tsx
+
+This document lists all sections of the homepage for easy reference when suggesting edits.
+
+
+1. ANIMATED BACKGROUND ELEMENTS
+   - Lines: 279-283
+   - Description: Fixed background with animated blur circles (top-right and bottom-left)
+   - Contains: Two pulsing gradient circles with blur effects
+
+
+2. NAVIGATION BAR (Fixed/Sticky Header)
+   - Lines: 285-525
+   - Description: Fixed navigation bar at the top of the page
+   - Z-index: z-50
+   - Height: h-16 (64px)
+   
+   2.1. Logo Section
+       - Lines: 290-311
+       - Contains: NextDeal logo image with fallback text logo
+   
+   2.2. Navigation Links
+       - Lines: 313-489
+       - Contains: 
+         - About link
+         - Pricing link
+         - Solutions dropdown menu (with hover functionality)
+   
+   2.3. Solutions Dropdown Menu
+       - Lines: 320-488
+       - Contains 4 columns:
+         - Column 1: LEADMAP SOLUTIONS (Lead Discovery, Data Enrichment)
+         - Column 2: Middle Section (Market Intelligence, Deal Execution)
+         - Column 3: PLATFORM (Interactive Maps, AI Assistant, Integrations, Advanced Filters, Admin Tools)
+         - Column 4: WHAT'S NEW (Watch Demo card with gradient background)
+   
+   2.4. Navigation Action Buttons
+       - Lines: 492-525
+       - Contains: 
+         - "Log In" button
+         - "Get a Demo" link
+         - "Sign Up For Free" button (primary CTA with gradient)
+
+
+3. MAIN CONTAINER (Neutral Light Rounded Container)
+   - Lines: 527-860
+   - Description: Main content wrapper with rounded corners and shadow
+   - Contains all main sections below (ends before features section)
+
+
+4. HERO SECTION
+   - Lines: 530-662
+   - Description: Main hero/landing section with headline and signup form
+   
+   4.1. Main Headline
+       - Lines: 534-537
+       - Text: "The AI lead platform for faster, smarter closings"
+       - Style: Large, bold, responsive font sizes
+   
+   4.2. Subheadline/Flavor Text
+       - Lines: 539-542
+       - Text: "Access verified, high-intent leads curated for your market..."
+       - Style: Medium-sized descriptive text
+   
+   4.3. Signup Form Section
+       - Lines: 544-662
+       - Contains:
+         - Email input field
+         - Sign in/Sign up button
+         - Conditional fields (Name, Password) that appear when email is entered
+         - Error message display
+         - Divider ("or")
+         - Social login buttons (Google, Microsoft)
+         - Terms of Service and Privacy Policy disclaimer
+
+
+5. LOGO STRIP & CUSTOMER REVIEWS SECTION
+   - Lines: 664-722
+   - Description: Section showing company logos and customer testimonial
+   - Background: bg-sand-10
+   
+   5.1. Logo Strip
+       - Lines: 668-693
+       - Contains:
+         - Text: "Join over 1,000 real estate professionals using NextDeal"
+         - 6 placeholder company logos (currently gray boxes)
+   
+   5.2. Customer Testimonial Quote
+       - Lines: 694-721
+       - Contains:
+         - Large quote text: "Every agent is more productive with NextDeal. We closed 75% more deals while cutting prospecting time in half."
+         - Attribution: John Froning, Real Estate Broker
+         - Company logo placeholder
+
+
+6. BENEFITS SECTION (Three Columns)
+   - Lines: 724-779
+   - Description: Three benefit cards showing key statistics
+   
+   6.1. Benefit Card 1 - 75% Increase
+       - Lines: 729-743
+       - Text: "75% increase in closed deals"
+       - Large number: "75%"
+       - Contains: Company logo placeholder
+   
+   6.2. Benefit Card 2 - 2X Efficiency
+       - Lines: 745-759
+       - Text: "2X agent efficiency"
+       - Large number: "2X"
+       - Contains: Company logo placeholder
+   
+   6.3. Benefit Card 3 - 50% Lower Costs
+       - Lines: 761-775
+       - Text: "50% lower prospecting costs"
+       - Large number: "50%"
+       - Contains: Company logo placeholder
+
+
+7. WAVE DIVIDER
+   - Lines: 781-859
+   - Description: Animated wave divider positioned after the Benefits section
+   - Features:
+     - Three layered SVG waves with gradient fills
+     - Smooth flowing animation (different speeds for each layer)
+     - Responsive height (h-20 to h-40 based on screen size)
+     - Gradient transitions from beige (#E8E3D6) to white
+     - Creates visual interest and smooth transition to next section
+
+
+8. FEATURES SECTION
+   - Lines: 862-961
+   - Description: Features showcase section with 4 feature cards (Apollo.io style)
+   - Background: White (bg-white)
+   - Position: After wave divider, outside main container
+   
+   8.1. Section Header
+       - Lines: 867-876
+       - Contains:
+         - Main heading: "Everything you need, from finding leads to winning deals"
+         - Subheading: "Powered by NextDeal — one of the largest, most accurate real estate data networks on the planet."
+       - Style: Large responsive heading with centered text
+       - Max widths: tablet: 433px, desktop: 629px, desktop-xl: 852px
+   
+   8.2. Features Grid
+       - Lines: 878-959
+       - Layout: Responsive grid (1 column mobile → 2 columns tablet → 4 columns desktop-s+)
+       - Visibility: Controlled by `showFeatureCards` state (hidden when scrolled out of view)
+       - Contains 4 clickable feature cards:
+       
+       8.2.1. Lead Discovery Card
+          - Lines: 880-898
+          - Icon: Search (Lucide React)
+          - Title: "Lead Discovery"
+          - Description: "Find high-quality property leads faster with AI-powered insights and comprehensive market data."
+          - Styling: Sand-10 background, hover effect, responsive padding
+          - Active state: White background with ring when selected
+       
+       8.2.2. Data Enrichment Card
+          - Lines: 900-918
+          - Icon: Database (Lucide React)
+          - Title: "Data Enrichment"
+          - Description: "Cleanse and complete your records with always-fresh property and owner data that powers smarter targeting."
+          - Styling: Sand-10 background, hover effect, responsive padding
+          - Active state: White background with ring when selected
+       
+       8.2.3. Market Intelligence Card
+          - Lines: 920-938
+          - Icon: Brain (Lucide React)
+          - Title: "Market Intelligence"
+          - Description: "Qualify and act on market opportunities in seconds with AI-powered analysis and insights."
+          - Styling: Sand-10 background, hover effect, responsive padding
+          - Active state: White background with ring when selected
+       
+       8.2.4. Deal Execution Card
+          - Lines: 940-958
+          - Icon: Target (Lucide React)
+          - Title: "Deal Execution"
+          - Description: "Keep deals moving with AI-powered prep, meeting insights, and automated follow-up workflows."
+          - Styling: Sand-10 background, hover effect, responsive padding
+          - Active state: White background with ring when selected
+   
+   8.3. Styling Features
+       - Responsive padding: desktop-xl: 72px, desktop: 54px, desktop-s: 36px, tablet: 28px, mobile: 20px
+       - Top padding: pt-16 (desktop-s: pt-20)
+       - Card padding: Compact (desktop-xl: px-8 py-6, desktop: px-6 py-5, tablet: py-5 px-5, mobile: py-4 px-4)
+       - Icon sizes: Responsive (desktop-xl: w-9 h-9, desktop: w-8 h-8, tablet: w-7 h-7, mobile: w-6 h-6)
+       - Text sizes: Compact (titles: desktop-xl: 20px, desktop: 18px; descriptions: desktop-xl: 13px, desktop: 12px)
+       - Hover effects: bg-sand-200 on hover
+       - Dark mode support included
+       - Icons use primary color
+       - All cards are clickable buttons that trigger tab switching
+
+
+9. STICKY CAROUSEL SECTION (Apollo.io Style)
+   - Lines: 963-1283
+   - Description: Sticky carousel that displays detailed content based on selected tab
+   - Background: White (bg-white)
+   - Position: Sticky at top-0 when `isCarouselLocked` is true, z-50
+   - Visibility: Hidden on mobile/tablet (desktop-s:block), visible when `showFeatureCards` is false
+   - Height: 100vh (min-height and height when active)
+   - Behavior: Scroll-wheel navigation sequences through tabs; locks until all tabs viewed
+   
+   9.1. Tab Navigation
+       - Lines: 972-1045
+       - Position: Sticky at top-0 within carousel container, z-10
+       - Contains: 4 horizontal tab buttons with scrollbar hidden
+       - Tab Colors (active state):
+         - Lead Discovery: #F8FF2C (yellow)
+         - Data Enrichment: #FFBDF5 (pink)
+         - Market Intelligence: #C1B7FF (purple)
+         - Deal Execution: #C5DDFF (blue)
+       - Tab Colors (inactive state): bg-sand-10
+       - Styling: Uses `<style jsx>` for hiding webkit scrollbar
+   
+   9.2. Content Area
+       - Lines: 1047-1282
+       - Layout: Absolute positioned content sections with opacity transitions
+       - Transition: 500ms opacity fade between tabs
+       - Only active tab visible (opacity-100 z-10), others hidden (opacity-0 z-0)
+       - Two-column layout: Content (left) and Image placeholder (right)
+       - Responsive: Stacks vertically on smaller screens
+       
+   9.3. Lead Discovery Content
+       - Lines: 1049-1106
+       - Triggered by: activeTab === 'lead-discovery'
+       - Contains:
+         - Headline: "Turn hours of prospecting into minutes"
+         - CTA buttons: "Get started for free" and "Learn more"
+         - 4 feature points with icons:
+           - AI-powered property discovery in seconds
+           - Verified property and owner data with built-in accuracy checks
+           - Smart lead prioritization to focus on high-value opportunities
+           - Automated workflows to identify and scale what works
+         - Image placeholder area (right side, 400px height)
+   
+   9.4. Data Enrichment Content
+       - Lines: 1108-1164
+       - Triggered by: activeTab === 'data-enrichment'
+       - Contains:
+         - Headline: "Keep your property data fresh and accurate"
+         - CTA buttons: "Get started for free" and "Learn more"
+         - 4 feature points with icons:
+           - Automated data enrichment with always-updated property records
+           - Skip tracing and contact information for owners
+           - Property history and ownership timeline tracking
+           - Data validation and deduplication for clean records
+         - Image placeholder area (right side, 400px height)
+   
+   9.5. Market Intelligence Content
+       - Lines: 1166-1223
+       - Triggered by: activeTab === 'market-intelligence'
+       - Contains:
+         - Headline: "Make smarter decisions with real-time market insights"
+         - CTA buttons: "Get started for free" and "Learn more"
+         - 4 feature points with icons:
+           - AI-powered market analysis and trend identification
+           - Real-time property value estimates and market comparisons
+           - Opportunity scoring to prioritize the best deals
+           - Comprehensive neighborhood and market data at your fingertips
+         - Image placeholder area (right side, 400px height)
+   
+   9.6. Deal Execution Content
+       - Lines: 1225-1281
+       - Triggered by: activeTab === 'deal-execution'
+       - Contains:
+         - Headline: "Close more deals with AI-powered deal management"
+         - CTA buttons: "Get started for free" and "Learn more"
+         - 4 feature points with icons:
+           - AI-powered deal preparation and client communication
+           - Automated follow-up sequences to keep deals moving forward
+           - Smart task prioritization to maximize closing rates
+           - Pipeline analytics to identify bottlenecks and opportunities
+         - Image placeholder area (right side, 400px height)
+   
+   9.7. Scroll Behavior
+       - Wheel event handler converts vertical scroll to tab navigation
+       - Throttled to 800ms between tab changes
+       - Locks carousel when it reaches top and tabs not all viewed
+       - Releases when all tabs have been visited
+       - Tabs track visited state to ensure sequential viewing
+
+
+10. CLOUDS DIVIDER (First - After Carousel)
+   - Lines: 1285-1312
+   - Description: First cloud divider with simple gradient background
+   - Height: 120px
+   - Background: White with blue gradient overlay
+   - Contains: 4 ellipse cloud shapes and wavy bottom path
+   - Gradient: White to light blue (#F0F9FF)
+
+
+11. STATS SECTION (Apollo.io Style)
+   - Lines: 1314-1327
+   - Description: Stats section showing user count and tagline
+   - Background: White (bg-white)
+   - Layout: Two-column (text left, large number right)
+   
+   11.1. Left Column
+       - Lines: 1316-1322
+       - Contains:
+         - Heading: "The fastest growing businesses use NextDeal"
+         - Description: "Over 1,000 real estate professionals use NextDeal to stay ahead of the competition."
+       - Width: Responsive (tablet: 329px, desktop: 411px, desktop-xl: 632px)
+   
+   11.2. Right Column
+       - Lines: 1324-1326
+       - Contains:
+         - Large number: "1K+"
+         - Style: Very large, black text, responsive sizes (64px to 200px)
+
+
+12. CLOUD DIVIDER (Second - After Stats Section)
+   - Lines: 1329-1390
+   - Description: Animated cloud divider matching wave divider style
+   - Background: Beige (#E8E3D6) with gradient to white
+   - Height: 120px
+   - Features:
+     - 4 animated cloud ellipses with floating animation
+     - Three-layer wavy bottom matching wave divider style
+     - Gradient transitions: #E8E3D6 → #F5F5F0 → #FFFFFF
+     - Cloud float animations (30s, 25s, 35s durations)
+
+
+13. FAQ SECTION
+   - Lines: 1392-1467
+   - Description: Frequently Asked Questions section with two-column layout
+   - Background: White (bg-white)
+   - Layout: Left column heading, right column questions
+   
+   13.1. Left Column - Heading
+       - Lines: 1396-1399
+       - Contains:
+         - Heading: "Frequently asked questions"
+       - Width: 50% on tablet+, full width on mobile
+   
+   13.2. Right Column - Questions
+       - Lines: 1402-1465
+       - Contains: 10 FAQ items using `<details>` and `<summary>` elements
+       - Questions (one-line, compressed):
+         1. Does NextDeal provide comprehensive property and ownership data?
+         2. Can NextDeal enable precise lead targeting via advanced filtering?
+         3. Does NextDeal automate outreach sequences and follow-ups?
+         4. Does NextDeal integrate smoothly with CRMs and existing real estate tools?
+         5. Does NextDeal offer analytics and reporting on lead generation performance?
+         6. Is NextDeal good value for its cost, especially for growing real estate teams?
+         7. Does NextDeal support users with helpful educational resources and onboarding?
+         8. Can NextDeal help reduce time spent on manual prospecting?
+         9. Does NextDeal improve the quality of sales pipelines?
+         10. Can NextDeal scale with a business as real estate needs grow?
+       - Animation: Smooth max-height transition when opening/closing
+       - Icon: "+" sign that rotates 45 degrees when open
+       - Answer text: Truncated with max-height animation
+
+
+NOTES:
+- All sections are responsive with breakpoints: tablet, desktop-s, desktop, desktop-xl
+- Dark mode support is included throughout
+- The page uses a beige background color (#E8E3D6)
+- Main container has rounded corners and shadow effects
+- Navigation is fixed/sticky at the top (z-50, h-16 = 64px)
+- Solutions dropdown appears on hover with a delay
+- Sticky carousel uses scroll-wheel navigation to sequence through tabs
+- Feature cards grid is hidden when scrolled past or when carousel is active
+- Carousel tabs are sticky within the carousel container when locked
+- Tab order: Lead Discovery → Market Intelligence → Data Enrichment → Deal Execution
+

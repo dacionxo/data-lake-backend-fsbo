@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+.temp/
+*.tmp
+*.log
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# CSV data files (if containing sensitive data)
+*.csv
+!example*.csv
+
+# AWS credentials
+.aws/
+
+# Supabase
+.supabase/

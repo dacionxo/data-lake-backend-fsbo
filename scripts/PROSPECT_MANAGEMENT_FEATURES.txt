@@ -1,0 +1,292 @@
+PROSPECT MANAGEMENT SCREEN - FEATURE DOCUMENTATION
+====================================================
+
+This document describes all features of the Prospect Management/Prospect Intelligence Dashboard screen.
+
+OVERVIEW
+--------
+The Prospect Management screen is an Apollo.io-inspired interface for managing and filtering real estate prospects. It features a collapsible filter sidebar, action bar, and multiple view types (table, cards, map, analytics, insights).
+
+MAIN COMPONENTS
+---------------
+
+1. APOLLO ACTION BAR (Top Bar)
+   - Title: "Prospects"
+   - View Selector: Dropdown to switch between Default, Table, Cards, and Map views
+   - Filter Toggle: Button to show/hide filters with active filter count badge
+   - Search Box: Center search input for searching prospects
+   - Sort Dropdown: Options include:
+     * Relevance (default)
+     * Price: High to Low
+     * Price: Low to High
+     * Date: Newest
+     * Date: Oldest
+     * AI Score: High to Low
+   - Action Buttons:
+     * Run AI Prompt (Sparkles icon)
+     * Import (Plus icon)
+     * Export (Download icon)
+
+2. APOLLO FILTER SIDEBAR (Left Sidebar)
+   - Collapsible: Can be hidden/shown via toggle
+   - Summary Stats: Shows Total, Net New, and Saved counts
+   - Filter Search: Search box to find specific filters
+   - Filter Type Selector: Dropdown to filter by:
+     * All Filters
+     * Property Info
+     * Person Info
+     * Company Info
+   - Active Filters Summary: Shows count of active filters with "Clear all" button
+   - Filter Groups: Expandable/collapsible filter categories
+   - Pin/Unpin: Each filter can be pinned to stay visible
+
+   FILTER TYPES:
+   
+   a) Status (Multi-select)
+      - Active
+      - Expired
+      - Sold
+      - Pending
+   
+   b) Price Range (Range)
+      - Min price input ($)
+      - Max price input ($)
+   
+   c) Location (Multi-select with Tabs)
+      - City tab: Searchable list of cities with counts
+      - State tab: Searchable list of states with counts
+      - Zip Code tab: Searchable list of zip codes with counts
+      - Each tab has its own search input
+      - Dynamic options populated from actual listing data
+   
+   d) Bedrooms (Multi-select)
+      - Options: 1, 2, 3, 4, 5+
+      - Exact match for 1-4, 5+ for 5 or more bedrooms
+   
+   e) Bathrooms (Multi-select)
+      - Options: 1+, 2+, 3+, 4+
+      - Minimum match (e.g., 2+ matches 2, 3, 4+ bathrooms)
+   
+   f) Square Footage (Range)
+      - Min sqft input
+      - Max sqft input
+   
+   g) Year Built (Range)
+      - Min year input (1800 to current year)
+      - Max year input (1800 to current year)
+   
+   h) AI Investment Score (Range)
+      - Min score input (0-100)
+      - Max score input (0-100)
+   
+   i) Agent Name (Text)
+      - Free text search input
+      - Searches within agent names
+   
+   j) Has Agent Email (Checkbox)
+      - Boolean filter for listings with agent email
+   
+   k) Has Agent Phone (Checkbox)
+      - Boolean filter for listings with agent phone
+   
+   l) Enriched (Checkbox)
+      - Boolean filter for listings with enrichment data
+      - Matches if has agent_email, agent_phone, agent_name, or ai_investment_score
+   
+   m) High Value ($500K+) (Checkbox)
+      - Boolean filter for listings priced $500,000 or higher
+   
+   n) Price Reduction (Checkbox)
+      - Boolean filter for listings with price drops
+      - Calculates percentage drop from list_price_min to list_price
+
+3. VIEW TYPE SELECTOR (Below Action Bar)
+   - Total: Shows all prospects matching filters
+   - Net New: Shows prospects created in last 30 days
+   - Saved: Shows prospects saved to CRM
+   - Each option shows count badge
+
+4. MAIN CONTENT AREA
+   
+   a) Default View (Analytics/Insights)
+      - ProspectAnalytics: Charts and visualizations
+      - ProspectInsights: AI-powered insights and recommendations
+   
+   b) Table View
+      - Table header row with column names:
+        * Checkbox
+        * Address
+        * Price
+        * Details
+        * Status
+        * AI Score
+        * Agent
+        * Actions
+      - Contact cards displayed as table rows
+      - Sticky header that stays visible when scrolling
+   
+   c) Cards View
+      - Contact cards displayed in card format
+      - Same columns as table view but in card layout
+   
+   d) Map View
+      - Google Maps integration
+      - Markers for each prospect
+      - Click markers for details
+
+5. APOLLO CONTACT CARD
+   - Checkbox: For bulk selection
+   - Address Column:
+     * Full address with MapPin icon
+     * "View Property" link if property_url exists
+   - Price Column:
+     * Formatted price (e.g., $500K, $1.2M)
+     * Price per sqft if available
+   - Details Column:
+     * Bedrooms and bathrooms count
+     * Square footage
+   - Status Column:
+     * Status badge with color coding:
+       - Green for Active
+       - Red for Expired/Sold
+       - Gray for Inactive
+   - AI Score Column:
+     * Score with Target icon
+     * Color coding:
+       - Green for 70+
+       - Orange for 50-69
+       - Gray for below 50
+   - Agent Column:
+     * Agent name (if available)
+     * Agent email with Mail icon
+     * Agent phone with Phone icon
+   - Actions Column:
+     * Email button (if agent_email exists)
+     * Call button (if agent_phone exists)
+     * Add to CRM button
+     * More actions menu
+
+6. APOLLO PAGINATION
+   - Left: Shows "Showing X - Y of Z" results
+   - Center: Page number buttons with ellipsis for large page counts
+   - Right: Page size selector (10, 25, 50, 100 per page)
+   - Previous/Next navigation buttons
+
+7. BULK ACTIONS BAR
+   - Appears when one or more prospects are selected
+   - Shows count of selected items
+   - "Add to CRM" button for bulk operations
+
+DATA FIELDS
+-----------
+
+Each prospect (Listing) contains:
+- listing_id: Unique identifier
+- street, city, state, zip_code: Address components
+- list_price: Listing price
+- list_price_min, list_price_max: Price range
+- beds, full_baths, half_baths: Property details
+- sqft: Square footage
+- year_built: Year property was built
+- status: Listing status (Active, Expired, Sold, Pending, etc.)
+- active: Boolean active status
+- agent_name, agent_email, agent_phone: Agent contact information
+- ai_investment_score: AI-generated investment score (0-100)
+- property_url: Link to property listing
+- created_at, updated_at: Timestamps
+- in_crm: Boolean indicating if saved to CRM
+- price_per_sqft: Calculated price per square foot
+
+FILTERING LOGIC
+---------------
+
+1. View Type Filtering:
+   - Total: All listings (excluding CRM contacts)
+   - Net New: Listings created in last 30 days
+   - Saved: Listings saved to CRM
+
+2. Apollo Filters:
+   - All filters are applied with AND logic
+   - Multi-select filters use OR logic within the filter
+   - Range filters use inclusive min/max
+   - Text filters use case-insensitive substring matching
+   - Location filters work independently (city, state, zip_code)
+
+3. Search Term:
+   - Searches across: address, city, state, zip_code, listing_id, agent_name
+   - Case-insensitive substring matching
+
+4. Sorting:
+   - Relevance: Prioritizes high AI scores, then recent listings
+   - Price: High to Low or Low to High
+   - Date: Newest or Oldest
+   - AI Score: High to Low
+
+PAGINATION
+----------
+- Default: 25 items per page
+- Options: 10, 25, 50, 100 per page
+- Page numbers with ellipsis for large result sets
+- Previous/Next navigation
+- Shows current range and total count
+
+INTERACTIONS
+------------
+
+1. Selection:
+   - Click checkbox to select individual prospects
+   - Selected prospects highlighted with background color
+   - Bulk actions appear when selections made
+
+2. Actions:
+   - Email: Opens email template modal
+   - Call: Opens phone dialer (tel: link)
+   - Add to CRM: Adds prospect to CRM contacts
+   - View Property: Opens property URL in new tab
+
+3. Filtering:
+   - Real-time filter application
+   - Filter counts update dynamically
+   - Clear individual filters or all filters
+   - Pin frequently used filters
+
+4. View Switching:
+   - Switch between Default, Table, Cards, Map views
+   - View state persists during session
+   - Each view optimized for different use cases
+
+TECHNICAL DETAILS
+-----------------
+
+- Framework: Next.js 16 with React
+- State Management: React hooks (useState, useMemo, useCallback)
+- Data Fetching: Supabase client
+- Styling: Inline styles with CSS variables
+- Client-Side Rendering: All components marked with 'use client'
+- Suspense Boundaries: Used for useSearchParams hook
+- Dynamic Imports: ProspectAnalytics loaded dynamically to avoid SSR issues
+
+PERFORMANCE OPTIMIZATIONS
+-------------------------
+
+- Debounced search inputs (300ms delay)
+- Memoized filter calculations
+- Pagination to limit rendered items
+- Dynamic location options (limited to top 50)
+- Filter counts calculated from current dataset
+- Prevented concurrent fetch operations with refs
+
+USER EXPERIENCE FEATURES
+------------------------
+
+- Loading states for data fetching
+- Empty states when no results found
+- Real-time filter counts
+- Visual feedback for selected items
+- Hover states on interactive elements
+- Sticky table headers
+- Smooth transitions and animations
+- Responsive layout
+- Keyboard navigation support
+- Accessible form controls
+

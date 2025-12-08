@@ -1,0 +1,16 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/sms/drip/run",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/cron/process-emails",
+      "schedule": "* * * * *"
+    }
+  ]
+}
