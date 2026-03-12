@@ -143,8 +143,8 @@ Same schema and `fsbo_leads` table as Lambda; same completeness fields.
 
 `lambda_fsbo_worker.py` builds a DataImpulse rotating residential proxy from env vars:
 
-- `DATAIMPULSE_LOGIN=<your-login>`
-- `DATAIMPULSE_PASSWORD=<your-password>`
+- `DATAIMPULSE_LOGIN=09d403cbca25b5a7a70e`
+- `DATAIMPULSE_PASSWORD=592ec29f5684ce55`
 - `DATAIMPULSE_HOST=gw.dataimpulse.com`
 - `DATAIMPULSE_PORT=823`
 - `DATAIMPULSE_REGION_TAG=__cr.us`
@@ -152,7 +152,7 @@ Same schema and `fsbo_leads` table as Lambda; same completeness fields.
 Example proxy URL:
 
 ```text
-http://<LOGIN>__cr.us:<PASSWORD>@gw.dataimpulse.com:823
+http://09d403cbca25b5a7a70e__cr.us:592ec29f5684ce55@gw.dataimpulse.com:823
 ```
 
 The worker creates a `requests.Session` with:
