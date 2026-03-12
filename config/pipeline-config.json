@@ -1,0 +1,144 @@
+{
+  "regions": {
+    "aws": ["us-east-1", "us-west-2", "us-east-2", "eu-west-1"],
+    "target_states": [
+      "MN", "IA", "MO", "AR", "DC", "ME", "NH", "VT", "MA", "RI", "CT",
+      "NY", "NJ", "PA", "DE", "MD", "VA", "WV", "NC", "SC", "GA",
+      "FL", "AL", "MS", "TN", "KY", "OH", "IN", "IL", "WI", "MI", "TX"
+    ]
+  },
+  "batch": {
+    "scraper": {
+      "fetch_batch_size": 10,
+      "save_batch_size": 100,
+      "max_workers": 10
+    },
+    "enrichment": {
+      "concurrency_limit": 8,
+      "batch_size": 50
+    },
+    "geocoding": {
+      "batch_size": 100,
+      "max_concurrent": 5
+    }
+  },
+  "delays": {
+    "scraper": {
+      "between_requests": 1.0,
+      "between_batches": 5.0,
+      "retry_delay": 30.0
+    },
+    "enrichment": {
+      "between_requests": 2.0,
+      "rate_limit_window": 60,
+      "rate_limit_requests": 20
+    },
+    "geocoding": {
+      "between_requests": 1.0,
+      "free_tier_delay": 1.0,
+      "paid_tier_delay": 0.1
+    }
+  },
+  "tables": {
+    "raw": {
+      "redfin_responses": "raw_redfin_responses",
+      "csv_imports": "raw_csv_imports",
+      "apollo_imports": "raw_apollo_imports"
+    },
+    "staging": {
+      "fsbo_raw": "fsbo_raw",
+      "import_staging": "import_staging"
+    },
+    "curated": {
+      "listings": "listings",
+      "fsbo_leads": "fsbo_leads",
+      "expired_listings": "expired_listings",
+      "frbo_leads": "frbo_leads",
+      "foreclosure_listings": "foreclosure_listings",
+      "imports": "imports",
+      "contacts": "contacts",
+      "deals": "deals",
+      "tasks": "tasks",
+      "lists": "lists",
+      "list_items": "list_items"
+    }
+  },
+  "pipelines": {
+    "redfin_fsbo_scraper": {
+      "name": "redfin_fsbo_scraper",
+      "type": "scraper",
+      "source_zone": "external",
+      "target_zone": "raw",
+      "source_tables": [],
+      "target_tables": ["raw_redfin_responses"],
+      "enabled": true,
+      "schedule": null
+    },
+    "fsbo_enrichment": {
+      "name": "fsbo_enrichment",
+      "type": "enrichment",
+      "source_zone": "raw",
+      "target_zone": "staging",
+      "source_tables": ["raw_redfin_responses"],
+      "target_tables": ["fsbo_raw"],
+      "enabled": true,
+      "schedule": null
+    },
+    "geocoding_backfill": {
+      "name": "geocoding_backfill",
+      "type": "geocoding",
+      "source_zone": "staging",
+      "target_zone": "curated",
+      "source_tables": ["fsbo_raw", "listings"],
+      "target_tables": ["fsbo_leads", "listings"],
+      "enabled": true,
+      "schedule": "0 2 * * *"
+    },
+    "csv_import": {
+      "name": "csv_import",
+      "type": "import",
+      "source_zone": "external",
+      "target_zone": "raw",
+      "source_tables": [],
+      "target_tables": ["raw_csv_imports"],
+      "enabled": true,
+      "schedule": null
+    },
+    "apollo_import": {
+      "name": "apollo_import",
+      "type": "import",
+      "source_zone": "external",
+      "target_zone": "raw",
+      "source_tables": [],
+      "target_tables": ["raw_apollo_imports"],
+      "enabled": true,
+      "schedule": null
+    }
+  },
+  "features": {
+    "enable_ip_rotation": true,
+    "enable_aws_proxy": true,
+    "enable_enrichment": true,
+    "enable_geocoding": true,
+    "enable_skip_tracing": true,
+    "enable_batch_processing": true,
+    "enable_error_retry": true,
+    "enable_debug_logging": false
+  },
+  "logging": {
+    "level": "INFO",
+    "file_path": "logs/pipeline.log",
+    "max_file_size_mb": 100,
+    "backup_count": 5,
+    "console_output": true
+  },
+  "errors": {
+    "max_retries": 3,
+    "retry_exponential_backoff": true,
+    "retry_base_delay": 1.0,
+    "max_error_rate": 0.1,
+    "error_notification_threshold": 10
+  }
+}
+
+

@@ -19,6 +19,10 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+env_for_ec2.txt
+
+# Proxy list (may contain credentials)
+proxies.txt
 
 # IDE
 .idea/
@@ -50,3 +54,8 @@ build/
 
 # Supabase
 .supabase/
+
+# Ollama (track script and README only; ignore installed binaries)
+ollama/*
+!ollama/README.md
+!ollama/install.ps1

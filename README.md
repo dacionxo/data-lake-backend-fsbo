@@ -2,6 +2,23 @@
 
 A comprehensive backend system for real estate lead data collection, enrichment, and storage. This repository contains all the tools, scripts, and schemas needed to scrape, process, and store real estate leads in Supabase.
 
+## 🎯 Repository Purpose
+
+**Data-Lake-Backend** is responsible for:
+- ✅ **Data Ingestion** - Web scraping, CSV/API imports
+- ✅ **Data Enrichment** - Skip tracing, geocoding, normalization
+- ✅ **Schema Management** - Database schema definitions and migrations
+- ✅ **Data Quality** - Validation, deduplication, quality checks
+- ✅ **Pipeline Orchestration** - Pipeline runs, tracking, error handling
+
+**LeadMap-main** (separate repository) handles:
+- User Experience (UX) and UI
+- CRM workflows
+- Cron triggers for pipelines
+- User authentication
+
+See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for complete separation of responsibilities.
+
 ## 📁 Repository Structure
 
 ```
@@ -149,11 +166,46 @@ See [SYNC_GUIDE.md](docs/SYNC_GUIDE.md) for detailed instructions.
 
 All documentation files are in the `docs/` directory. Key documents include:
 
-- **SYNC_GUIDE.md** - Schema synchronization guide ⭐
-- **PROJECT_STRUCTURE.md** - Overview of the entire system
+- **[PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)** - Repository responsibilities and architecture ⭐
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Complete architecture diagram and data flow
+- **[SYNC_GUIDE.md](docs/SYNC_GUIDE.md)** - Schema synchronization guide
+- **[INSTALLATION_ORDER.md](scripts/supabase/INSTALLATION_ORDER.md)** - Database schema installation order
 - **SETUP.md** - Detailed setup instructions
 - **README-GEOCODING.md** - Geocoding system documentation
 - **PHASE_0_SETUP_GUIDE.md** - Initial setup checklist
+
+## 🔑 Key Concepts
+
+### Canonical ID Strategy
+
+- **Properties:** Use `listing_id` (TEXT) as the canonical business ID
+  - Tables: `listings`, `fsbo_leads`, `expired_listings`, etc.
+  - Format: Redfin listing ID or URL slug
+- **User Entities:** Use UUID for technical IDs
+  - Tables: `contacts`, `deals`, `tasks`, `lists`
+  - Scoped per user
+
+See [canonical_id_strategy.sql](scripts/supabase/canonical_id_strategy.sql) for full documentation.
+
+### Configuration
+
+Centralized configuration in `config/` directory:
+- `pipeline-config.yaml` - Human-readable configuration
+- `pipeline-config.json` - JSON format
+- `pipeline-config.ts` - TypeScript with environment variable overrides
+
+Both Data-Lake-Backend and LeadMap-main read from the same config shape.
+
+### Feature Flags
+
+Feature flags stored in Supabase `feature_flags` table allow toggling:
+- Pipeline execution
+- Schema behaviors
+- Feature rollouts
+
+Query via: `is_feature_enabled(flag_key, user_id, user_role, environment)`
+
+See [feature_flags_schema.sql](scripts/supabase/feature_flags_schema.sql) for setup.
 
 ## 🔧 Scripts Overview
 

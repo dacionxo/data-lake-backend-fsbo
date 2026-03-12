@@ -1,0 +1,12 @@
+CyberBackgroundChecks address lookup: 1739 Emerald Sea Drive, Chesapeake, VA
+===============================================================================
+
+URL (use in browser for property owner data):
+  https://www.cyberbackgroundchecks.com/address/1739-emerald-sea-drive/chesapeake/va
+
+Result: Script received HTTP 403 Forbidden. Use the link above in a browser
+to view who lives at this address / property owner information.
+
+Script: cyber_background_checks_lookup.py
+- Builds URL from address: /address/<street-slug>/<city>/<state>
+- Uses cloudscraper when available. Re-run with: py -3.13 cyber_background_checks_lookup.py

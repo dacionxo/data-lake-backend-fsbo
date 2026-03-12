@@ -1,0 +1,39 @@
+Recon-ng lookup: 1739 Emerald Sea Drive, Chesapeake, VA (homeowner information)
+================================================================================
+
+Completed steps
+---------------
+1. Created recon-ng workspace: homeowner_lookup
+2. Inserted the address into the locations table:
+   street_address: 1739 Emerald Sea Drive, Chesapeake, VA
+   (latitude/longitude left blank for a geocoding module to fill later)
+
+Workspace location (SQLite DB)
+-----------------------------
+Windows: %USERPROFILE%\.recon-ng\workspaces\homeowner_lookup\
+
+To view or run more in recon-ng:
+  cd "d:\Downloads\Data Lake Backend\recon-ng"
+  python recon-cli -w homeowner_lookup
+  Then: db query SELECT * FROM locations
+
+Result: No homeowner data from recon-ng
+--------------------------------------
+Recon-ng does not include any module that looks up property owner or resident
+information by street address. The framework is built for:
+
+  - Domain/company/contact reconnaissance (e.g. domains -> contacts, companies -> contacts)
+  - Location-related modules in the marketplace only:
+    - geocode: address -> latitude/longitude (requires Google API key)
+    - reverse_geocode: coordinates -> address
+    - locations-pushpins: Flickr/Shodan/Twitter/YouTube media near a location
+
+None of these produce owner name, phone, or email for an address.
+
+Recommendations for homeowner info at this address
+--------------------------------------------------
+1. County assessor / property records: Chesapeake, VA (or the correct county for this address)
+   - Search by address for owner name and sometimes contact details.
+2. TruePeopleSearch (manual): Use the URL from lookup_result_1739_Emerald_Sea.txt in a browser;
+   automated requests to that site return 403.
+3. Paid skip-trace or people-search APIs that support address-based lookups.

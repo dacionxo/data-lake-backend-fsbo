@@ -52,10 +52,17 @@ def setup_logging():
     file_formatter = logging.Formatter('%(asctime)s - %(levelname)-8s - %(message)s')
     console_formatter = logging.Formatter('%(levelname)-8s: %(message)s')
 
-    # File handler
-    file_handler = logging.FileHandler(LOG_PATH, mode='w', encoding='utf-8')
-    file_handler.setFormatter(file_formatter)
-    logger.addHandler(file_handler)
+    # File handler - create directory if needed
+    try:
+        log_dir = Path(LOG_PATH).parent
+        if log_dir and not log_dir.exists():
+            log_dir.mkdir(parents=True, exist_ok=True)
+        file_handler = logging.FileHandler(LOG_PATH, mode='w', encoding='utf-8')
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
+    except (PermissionError, OSError):
+        # If we can't create the log file, just use console logging
+        pass
 
     # Console handler
     console_handler = logging.StreamHandler()

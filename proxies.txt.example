@@ -1,0 +1,4 @@
+# One proxy per line: login:password@hostname:port
+# Example (DataImpulse with US residential):
+# your_login__cr.us:your_password@gw.dataimpulse.com:823
+# Lines starting with # are ignored.

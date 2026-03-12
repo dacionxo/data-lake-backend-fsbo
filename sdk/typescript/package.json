@@ -1,0 +1,39 @@
+{
+  "name": "@nextdeal/datalake-sdk",
+  "version": "0.1.0",
+  "description": "Unified Data Lake SDK for NextDeal Supabase operations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "supabase",
+    "data-lake",
+    "sdk",
+    "nextdeal"
+  ],
+  "author": "NextDeal <dev@nextdeal.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
+
+
