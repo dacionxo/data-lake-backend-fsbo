@@ -167,7 +167,7 @@ $env:SUPABASE_SERVICE_ROLE_KEY = "<paste-your-service-role-key>"
    SUPABASE_SERVICE_ROLE_KEY=<paste-your-service-role-key-here>
    ```
 
-   Optional: `DATAIMPULSE_LOGIN`, `DATAIMPULSE_PASSWORD`, `FSBO_WORKER_CONCURRENCY=70`
+   Optional (DataImpulse proxy rotation): `DATAIMPULSE_LOGIN`, `DATAIMPULSE_PASSWORD`; or set `DATAIMPULSE_PROXY_LIST_PATH=proxies.txt` with one URL per line. Country/region is configured at the provider. Concurrency: `FSBO_WORKER_CONCURRENCY=70`
 3. Start the worker: `./start_fsbo_worker.sh` or:
 
    ```bash

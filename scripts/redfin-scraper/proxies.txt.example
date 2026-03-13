@@ -1,0 +1,12 @@
+# DataImpulse (and generic) proxy list for FSBO worker rotation.
+# One proxy URL per line; used when DATAIMPULSE_PROXY_LIST_PATH points to this file
+# (e.g. DATAIMPULSE_PROXY_LIST_PATH=proxies.txt in scripts/redfin-scraper).
+# See FSBO_Bulk_Scraper_Pipeline.md §5.1 for env vars and rotation behavior.
+#
+# Format: with or without "http://" (http:// is added automatically).
+# Example (DataImpulse US residential):
+# YOUR_LOGIN__cr.us:YOUR_PASSWORD@gw.dataimpulse.com:823
+#
+# You can paste 2000+ lines (e.g. from DataImpulse). Round-robin uses the next line
+# per request. Multiple lines = better distribution; duplicate lines still work.
+# Lines starting with # are ignored.

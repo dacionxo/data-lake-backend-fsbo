@@ -17,6 +17,7 @@ import boto3
 import requests
 
 from FSBO import scrape_redfin_listing, compute_completeness, _push_listing_to_supabase
+from proxy_rotation import get_next_proxy, get_proxy_count, load_proxies
 
 
 logging.basicConfig(
@@ -55,8 +56,8 @@ def _get_session() -> requests.Session:
 
 def _build_session() -> requests.Session:
     """
-    Create a requests.Session for scraping.
-    Optional: set DATAIMPULSE_* env vars for rotating residential proxy.
+    Create a requests.Session for scraping. Proxy is set per request via
+    proxy_rotation.get_next_proxy() in process_message for DataImpulse rotation.
     """
     session = requests.Session()
     session.headers.update(
@@ -72,14 +73,6 @@ def _build_session() -> requests.Session:
             "Connection": "keep-alive",
         }
     )
-    login = os.environ.get("DATAIMPULSE_LOGIN")
-    password = os.environ.get("DATAIMPULSE_PASSWORD")
-    host = os.environ.get("DATAIMPULSE_HOST", "gw.dataimpulse.com")
-    port = os.environ.get("DATAIMPULSE_PORT", "823")
-    if login and password:
-        proxy_url = f"http://{login}:{password}@{host}:{port}"
-        session.proxies.update({"http": proxy_url, "https": proxy_url})
-        logger.info("Using DataImpulse proxy for EC2 worker")
     return session
 
 
@@ -97,6 +90,13 @@ def process_message(body: Dict[str, Any], session: requests.Session) -> bool:
     attempt = int(body.get("attempt", 1))
 
     logger.info(f"[JOB] run_id={run_id} attempt={attempt} url={url}")
+
+    # Rotate DataImpulse proxy per request (round-robin from proxy_rotation)
+    proxy_url = get_next_proxy()
+    if proxy_url:
+        session.proxies.update({"http": proxy_url, "https": proxy_url})
+    else:
+        session.proxies.clear()
 
     try:
         data = scrape_redfin_listing(url, session)
@@ -229,12 +229,22 @@ def main() -> int:
         logger.error("SQS connectivity check failed. Fix IAM/queue/region and restart.")
         return 1
 
-    logger.info(
-        "FSBO SQS worker started. Queue=%s Region=%s Concurrency=%d",
-        SQS_QUEUE_URL,
-        AWS_REGION,
-        WORKER_CONCURRENCY,
-    )
+    n_proxies = get_proxy_count()
+    if n_proxies:
+        logger.info(
+            "FSBO SQS worker started. Queue=%s Region=%s Concurrency=%d DataImpulse proxies=%d (rotating)",
+            SQS_QUEUE_URL,
+            AWS_REGION,
+            WORKER_CONCURRENCY,
+            n_proxies,
+        )
+    else:
+        logger.info(
+            "FSBO SQS worker started. Queue=%s Region=%s Concurrency=%d (no proxy rotation)",
+            SQS_QUEUE_URL,
+            AWS_REGION,
+            WORKER_CONCURRENCY,
+        )
 
     job_queue: "Queue[Tuple[Dict[str, Any], str]]" = Queue(maxsize=IN_FLIGHT_QUEUE_SIZE)
     stop_event = threading.Event()

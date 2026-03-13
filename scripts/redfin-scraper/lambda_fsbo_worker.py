@@ -7,6 +7,7 @@ from typing import Any, Dict, List
 import requests
 
 from FSBO import scrape_redfin_listing, compute_completeness
+from proxy_rotation import get_next_proxy
 
 
 logger = logging.getLogger()
@@ -23,40 +24,12 @@ SUPABASE_SERVICE_ROLE_KEY_ENV = "SUPABASE_SERVICE_ROLE_KEY"
 SUPABASE_FSBO_TABLE_ENV = "SUPABASE_FSBO_TABLE"  # default: fsbo_leads
 
 
-def _build_proxy_url() -> str:
-    """
-    Build the HTTP proxy URL for DataImpulse rotating residential proxies using
-    Lambda environment variables. Does NOT hardcode credentials.
-    """
-    login = os.environ.get(DATAIMPULSE_LOGIN_ENV)
-    password = os.environ.get(DATAIMPULSE_PASSWORD_ENV)
-    host = os.environ.get(DATAIMPULSE_HOST_ENV, "gw.dataimpulse.com")
-    port = os.environ.get(DATAIMPULSE_PORT_ENV, "823")
-
-    if not login or not password:
-        raise RuntimeError(
-            "DataImpulse credentials are not set in environment variables "
-            f"({DATAIMPULSE_LOGIN_ENV}, {DATAIMPULSE_PASSWORD_ENV})."
-        )
-
-    # Username is used as-is (no region suffix needed)
-    username = login
-    return f"http://{username}:{password}@{host}:{port}"
-
-
 def _build_session() -> requests.Session:
     """
-    Create a requests.Session configured to use DataImpulse rotating
-    residential proxies and efficient headers for HTML-only scraping.
+    Create a requests.Session with headers for HTML scraping. Proxy is set
+    per request via proxy_rotation.get_next_proxy() in _scrape_and_save.
     """
-    proxy_url = _build_proxy_url()
     session = requests.Session()
-    session.proxies.update(
-        {
-            "http": proxy_url,
-            "https": proxy_url,
-        }
-    )
     session.headers.update(
         {
             # Realistic browser UA
@@ -145,11 +118,14 @@ def _supabase_upsert_fsbo_lead(data: Dict[str, Any]) -> bool:
 
 def _scrape_and_save(url: str, run_id: str, attempt: int) -> Dict[str, Any]:
     """
-    Scrape a single listing URL via DataImpulse proxy, compute completeness,
-    and upsert into Supabase using existing helper.
+    Scrape a single listing URL via DataImpulse proxy (rotating per request),
+    compute completeness, and upsert into Supabase.
     Returns a small status dict for metrics.
     """
     session = _build_session()
+    proxy_url = get_next_proxy()
+    if proxy_url:
+        session.proxies.update({"http": proxy_url, "https": proxy_url})
     try:
         data = scrape_redfin_listing(url, session)
         if not data:

@@ -121,9 +121,16 @@ You can run **EC2 only**, **Lambda only**, or **both** (they share the queue; ea
 
 ## 5. Step 4a – EC2 worker: scrape via DataImpulse (optional) + write to Supabase
 
-### 5.1. EC2 proxy configuration (optional)
+### 5.1. EC2 proxy configuration and rotation (optional)
 
-`fsbo_sqs_worker.py` builds a `requests.Session`. If `DATAIMPULSE_LOGIN` and `DATAIMPULSE_PASSWORD` are set (via SSM or `.env` on the instance), it uses the same DataImpulse proxy pattern as Lambda (e.g. `gw.dataimpulse.com:823`). Otherwise it fetches without a proxy.
+`fsbo_sqs_worker.py` uses **proxy rotation** (same pattern as the Skip Tracing Module and scrapy-rotating-proxies): each scrape request gets the next proxy from a round-robin list so DataImpulse can assign different exit IPs and reduce bans.
+
+- **Module**: `proxy_rotation.py` in `scripts/redfin-scraper`. It loads a proxy list and exposes thread-safe `get_next_proxy()`.
+- **Sources** (first that applies):
+  1. **File**: `DATAIMPULSE_PROXY_LIST_PATH` — path to a file with one proxy URL per line (e.g. `proxies.txt`). Lines starting with `#` are ignored. Example line: `http://login__cr.us:password@gw.dataimpulse.com:823`.
+  2. **Env list**: `DATAIMPULSE_PROXY_LIST` — comma-separated proxy URLs.
+  3. **Credentials**: `DATAIMPULSE_LOGIN`, `DATAIMPULSE_PASSWORD`, `DATAIMPULSE_HOST` (default `gw.dataimpulse.com`), `DATAIMPULSE_PORT` (default `823`). Country/region is configured at the proxy provider or in your proxy list, not in code.
+- If no proxies are configured, the worker fetches without a proxy. On startup the worker logs either `DataImpulse proxies=N (rotating)` or `(no proxy rotation)`.
 
 ### 5.2. EC2 scraping and Supabase write
 
@@ -139,29 +146,19 @@ Same schema and `fsbo_leads` table as Lambda; same completeness fields.
 
 ## 6. Step 4b – Lambda: scrape via DataImpulse + write to Supabase (optional)
 
-### 6.1. Lambda proxy configuration (DataImpulse)
+### 6.1. Lambda proxy configuration (DataImpulse + rotation)
 
-`lambda_fsbo_worker.py` builds a DataImpulse rotating residential proxy from env vars:
+`lambda_fsbo_worker.py` uses the same **proxy_rotation** module as EC2: each URL in the batch gets the next proxy from the round-robin list (file, env list, or credentials). Same env vars as EC2 (see §5.1). Proxy country/region is configured at the provider or in the proxy list.
 
-- `DATAIMPULSE_LOGIN=09d403cbca25b5a7a70e`
-- `DATAIMPULSE_PASSWORD=592ec29f5684ce55`
-- `DATAIMPULSE_HOST=gw.dataimpulse.com`
-- `DATAIMPULSE_PORT=823`
-- `DATAIMPULSE_REGION_TAG=__cr.us`
+- `DATAIMPULSE_LOGIN`, `DATAIMPULSE_PASSWORD`, `DATAIMPULSE_HOST`, `DATAIMPULSE_PORT`
 
-Example proxy URL:
+Example proxy URL (country/region set at DataImpulse or in list):
 
 ```text
-http://09d403cbca25b5a7a70e__cr.us:592ec29f5684ce55@gw.dataimpulse.com:823
+http://login:password@gw.dataimpulse.com:823
 ```
 
-The worker creates a `requests.Session` with:
-
-- Proxies set to that URL (`http`/`https`).
-- HTML-only headers (`Accept: text/html,...`).
-- Keep-alive and gzip enabled.
-
-Every listing fetch goes through DataImpulse’s **rotating residential IP pool**.
+Each request uses the next proxy in the list so listing fetches go through DataImpulse’s **rotating residential IP pool** with per-request rotation.
 
 ### 6.2. Lambda scraping logic
 
